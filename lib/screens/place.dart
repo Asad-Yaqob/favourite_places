@@ -1,3 +1,5 @@
+import 'package:favourite_places/screens/manage_screen.dart';
+import 'package:favourite_places/widgets/main_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -22,44 +24,65 @@ class _PlacesScreenState extends ConsumerState<PlacesScreen> {
     super.initState();
 
     _placesFuture = ref.read(userPlacesProvider.notifier).loadPlaces();
-    // print(_placesFuture);
+  }
+
+  void _navigateTo(String goTo) {
+    Navigator.pop(context);
+    if (goTo == 'Home') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const PlacesScreen(),
+        ),
+      );
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const ManageScreen(),
+        ),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final userPlaces = ref.watch(userPlacesProvider);
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.onPrimary,
-          title: Text(
-            'Your Places',
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge!
-                .copyWith(color: Theme.of(context).colorScheme.onSurface),
+      drawer: MainDrawer(
+        onPressedNavigate: _navigateTo,
+      ),
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.onPrimary,
+        title: Text(
+          'Your Places',
+          style: Theme.of(context)
+              .textTheme
+              .titleLarge!
+              .copyWith(color: Theme.of(context).colorScheme.onSurface),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const AddPlaceScreen(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.add),
           ),
-          actions: [
-            IconButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const AddPlaceScreen(),
+        ],
+      ),
+      body: FutureBuilder(
+        future: _placesFuture,
+        builder: (context, snapshot) =>
+            snapshot.connectionState == ConnectionState.waiting
+                ? const Center(child: CircularProgressIndicator())
+                : PlaceList(
+                    places: userPlaces,
                   ),
-                );
-              },
-              icon: const Icon(Icons.add),
-            ),
-          ],
-        ),
-        body:FutureBuilder(
-          future: _placesFuture,
-          builder: (context, snapshot) =>
-          snapshot.connectionState == ConnectionState.waiting
-              ? const Center(child: CircularProgressIndicator())
-              : PlaceList(
-            places: userPlaces,
-          ),
-        ),
+      ),
     );
   }
 }
