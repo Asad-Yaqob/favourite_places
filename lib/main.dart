@@ -1,9 +1,9 @@
+import 'package:favourite_places/utils/conectivity_wrapper.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
-
-import 'package:favourite_places/screens/place.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:favourite_places/ui/screens/place.dart';
 
 final colorScheme = ColorScheme.fromSeed(
   brightness: Brightness.dark,
@@ -28,8 +28,8 @@ final theme = ThemeData().copyWith(
 );
 
 void main() async {
-   WidgetsFlutterBinding.ensureInitialized(); 
-  await Firebase.initializeApp(); 
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(
     const ProviderScope(
       child: MyApp(),
@@ -42,10 +42,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Great Places',
-      theme: theme,
-      home: const PlacesScreen(),
+    return ConnectivityWrapper(
+      child: MaterialApp(
+        title: 'Great Places',
+        theme: theme,
+        debugShowCheckedModeBanner: false,
+        home: const PlacesScreen(),
+      ),
     );
   }
 }

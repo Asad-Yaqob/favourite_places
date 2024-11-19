@@ -5,17 +5,20 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:favourite_places/screens/map.dart';
+import 'package:favourite_places/ui/screens/map.dart';
 import 'package:favourite_places/models/place.dart';
 
 class LocationInput extends StatefulWidget {
   const LocationInput({
     super.key,
     required this.onSelectCurrentLocation,
+    this.initialLocation,
+    required this.isAdding,
   });
 
   final void Function(PlaceLocation) onSelectCurrentLocation;
-
+  final PlaceLocation? initialLocation;
+  final bool isAdding;
   @override
   State<LocationInput> createState() => _LocationInputState();
 }
@@ -31,13 +34,12 @@ class _LocationInputState extends State<LocationInput> {
 
     final lat = _pickedLocation!.latitude;
     final lng = _pickedLocation!.longitude;
-    return 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=16&size=600x300&maptype=roadmap&markers=color:red%7Clabel:A%7C$lat,$lng&key=Your Key';
+    return 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=16&size=600x300&maptype=roadmap&markers=color:red%7Clabel:A%7C$lat,$lng&key=Api_Key';
   }
 
   Future<void> savePlace(double latitude, double longitude) async {
-    
     final url = Uri.parse(
-        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=Your Key');
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=Api_Key');
 
     final response = await http.get(url);
     final resData = json.decode(response.body);
@@ -98,7 +100,9 @@ class _LocationInputState extends State<LocationInput> {
     final pickedLocation = await Navigator.push<LatLng>(
       context,
       MaterialPageRoute(
-        builder: (context) => const MapScreen(),
+        builder: (context) => MapScreen(
+          initialLocation: _pickedLocation,
+        ),
       ),
     );
 
@@ -110,8 +114,16 @@ class _LocationInputState extends State<LocationInput> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
 
+    if (widget.initialLocation != null) {
+      _pickedLocation = widget.initialLocation;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     Widget previewContent = Center(
       child: Text(
         'No Location Selected',
@@ -155,12 +167,12 @@ class _LocationInputState extends State<LocationInput> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             TextButton.icon(
-              onPressed: _getCurrentLocation,
+              onPressed: widget.isAdding ? null : _getCurrentLocation,
               icon: const Icon(Icons.location_on),
               label: const Text('Current Location'),
             ),
             TextButton.icon(
-              onPressed: selectOnMap,
+              onPressed: widget.isAdding ? null : selectOnMap,
               icon: const Icon(Icons.map),
               label: const Text('Pick Location'),
             ),

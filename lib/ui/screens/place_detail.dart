@@ -1,4 +1,4 @@
-import 'package:favourite_places/screens/map.dart';
+import 'package:favourite_places/ui/screens/map.dart';
 import 'package:flutter/material.dart';
 
 import 'package:favourite_places/models/place.dart';
@@ -14,7 +14,7 @@ class PlaceDetailScreen extends StatelessWidget {
   String get locationImage {
     final lat = place.location.latitude;
     final lng = place.location.longitude;
-    return 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng=&zoom=16&size=600x300&maptype=roadmap&markers=color:red%7Clabel:A%7C$lat,$lng&key=Your key';
+    return 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng=&zoom=16&size=600x300&maptype=roadmap&markers=color:red%7Clabel:A%7C$lat,$lng&key=Api_Key';
   }
 
   @override
@@ -34,7 +34,7 @@ class PlaceDetailScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.file(
+            Image.network(
               place.image,
               fit: BoxFit.cover,
               width: double.infinity,

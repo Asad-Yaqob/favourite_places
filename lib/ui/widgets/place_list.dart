@@ -1,4 +1,4 @@
-import 'package:favourite_places/widgets/place_item.dart';
+import 'package:favourite_places/ui/widgets/place_item.dart';
 import 'package:flutter/material.dart';
 
 import 'package:favourite_places/models/place.dart';
@@ -14,7 +14,10 @@ class PlaceList extends StatelessWidget {
   Widget build(BuildContext context) {
     if (places.isEmpty) {
       return Center(
-        child: Image.asset('assets/images/no-data.png'),
+        child: Image.asset(
+          'assets/images/no-data.png',
+          width: 200,
+        ),
       );
     }
 

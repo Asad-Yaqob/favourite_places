@@ -4,9 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ImageInput extends StatefulWidget {
-  const ImageInput({super.key, required this.onPickImage,});
+  const ImageInput({
+    super.key,
+    required this.onPickImage,
+    this.initialImage,
+    required this.isAdding,
+  });
 
   final void Function(File) onPickImage;
+  final String? initialImage;
+  final bool isAdding;
 
   @override
   State<ImageInput> createState() => _ImageInputState();
@@ -35,7 +42,6 @@ class _ImageInputState extends State<ImageInput> {
 
   @override
   Widget build(BuildContext context) {
-
     Widget content = TextButton.icon(
       onPressed: _takePicture,
       label: const Text('Take Picture'),
@@ -43,10 +49,20 @@ class _ImageInputState extends State<ImageInput> {
     );
 
     if (_selectedImage != null) {
-        content = GestureDetector(
-        onTap: _takePicture,
+      content = GestureDetector(
+        onTap: widget.isAdding ? null : _takePicture,
         child: Image.file(
           _selectedImage!,
+          fit: BoxFit.cover,
+          width: double.infinity,
+          height: double.infinity,
+        ),
+      );
+    } else if (widget.initialImage != null) {
+      content = GestureDetector(
+        onTap: widget.isAdding ? null : _takePicture,
+        child: Image.network(
+          widget.initialImage!,
           fit: BoxFit.cover,
           width: double.infinity,
           height: double.infinity,

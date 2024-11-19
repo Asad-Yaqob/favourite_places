@@ -1,26 +1,79 @@
 {
   "project_info": {
-    "project_number": "411232757655",
-    "project_id": "chatapp-6a7be",
-    "storage_bucket": "chatapp-6a7be.firebasestorage.app"
+    "project_number": "630025644425",
+    "project_id": "test01-ecfe0",
+    "storage_bucket": "test01-ecfe0.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:411232757655:android:3cf59cbf9fff14234e46d2",
+        "mobilesdk_app_id": "1:630025644425:android:2eac81d44d01b5d8fed958",
         "android_client_info": {
           "package_name": "com.example.favourite_places"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "630025644425-jd6kdro23qtlodikq3ifvf6iaaodlha2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyA1DUI1jW43wOg8f0arwArVaUrLSm3zqro"
+          "current_key": "AIzaSyAqTU07AZCLfHXjaedmN652sqiLwg04nHg"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "630025644425-jd6kdro23qtlodikq3ifvf6iaaodlha2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "630025644425-15j4egfs0e4nlf454ghcfi8ar1ke64eh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.practiceCrud"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:630025644425:android:a92f26abd1fe3290fed958",
+        "android_client_info": {
+          "package_name": "com.example.practice_crud"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "630025644425-jd6kdro23qtlodikq3ifvf6iaaodlha2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqTU07AZCLfHXjaedmN652sqiLwg04nHg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "630025644425-jd6kdro23qtlodikq3ifvf6iaaodlha2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "630025644425-15j4egfs0e4nlf454ghcfi8ar1ke64eh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.practiceCrud"
+              }
+            }
+          ]
         }
       }
     }

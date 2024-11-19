@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapScreen extends StatefulWidget {
-  const MapScreen({
+  MapScreen({
     super.key,
     this.location = const PlaceLocation(
       latitude: 37.422,
@@ -11,9 +11,11 @@ class MapScreen extends StatefulWidget {
       address: '',
     ),
     this.isSelecting = true,
+    this.initialLocation,
   });
 
-  final PlaceLocation location;
+  PlaceLocation location;
+  PlaceLocation? initialLocation;
   final bool isSelecting;
 
   @override
@@ -22,6 +24,20 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   LatLng? _pickedLocation;
+
+  @override
+  void initState() {
+    super.initState();
+
+  if (widget.initialLocation != null) {
+    widget.location = widget.initialLocation!;
+      _pickedLocation = LatLng(
+        widget.initialLocation!.latitude,
+        widget.initialLocation!.longitude,
+      );  
+  }
+  
+  }
 
   @override
   Widget build(BuildContext context) {

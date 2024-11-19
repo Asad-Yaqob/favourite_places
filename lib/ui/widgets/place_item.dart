@@ -1,4 +1,4 @@
-import 'package:favourite_places/screens/place_detail.dart';
+import 'package:favourite_places/ui/screens/place_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -32,7 +32,7 @@ class PlaceItem extends StatelessWidget {
           children: [
             FadeInImage(
               placeholder: MemoryImage(kTransparentImage),
-              image: FileImage(place.image),
+              image: NetworkImage(place.image),
               fit: BoxFit.cover,
               height: 200,
               width: double.infinity,

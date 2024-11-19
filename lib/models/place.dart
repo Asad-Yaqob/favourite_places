@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:uuid/uuid.dart';
 
@@ -26,6 +25,19 @@ class Place {
 
   final String id;
   final String placeName;
-  final File image;
+  final String image;
   final PlaceLocation location;
+
+ Map<String, dynamic> toMap(){
+    return{
+      'id': id,
+      'placeName': placeName,
+      'image': image,
+      'location': {
+        'latitude': location.latitude,
+        'longitude': location.longitude,
+        'address': location.address,
+      }
+    };
+  }
 }

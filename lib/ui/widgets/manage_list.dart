@@ -1,5 +1,5 @@
 import 'package:favourite_places/models/place.dart';
-import 'package:favourite_places/widgets/manage_item.dart';
+import 'package:favourite_places/ui/widgets/manage_item.dart';
 import 'package:flutter/material.dart';
 
 class ManageList extends StatelessWidget {

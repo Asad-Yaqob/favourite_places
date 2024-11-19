@@ -1,73 +1,90 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:path_provider/path_provider.dart' as syspaths;
-import 'package:path/path.dart' as path;
-import 'package:sqflite/sqflite.dart' as sql;
-import 'package:sqflite/sqlite_api.dart';
 
+import 'package:favourite_places/services/database.dart';
 import 'package:favourite_places/models/place.dart';
 
-Future<Database> _getDatabase() async {
-  final dbPath = await sql.getDatabasesPath();
-  // await sql.deleteDatabase(path.join(dbPath, 'places.db'));
-
-  final db = await sql.openDatabase(
-    path.join(dbPath, 'places.db'),
-    onCreate: (db, version) async {
-      await db.execute(
-          'CREATE TABLE user_places(id TEXT PRIMARY KEY, placeName TEXT, image TEXT, lat REAL, lng REAL, address Text)');
-    },
-    version: 1,
-  );
-
-  return db;
-}
+final _database = DatabaseService();
 
 class UserPlacesNotifier extends StateNotifier<List<Place>> {
   UserPlacesNotifier() : super(const []);
 
-  Future<void> loadPlaces() async {
-    final db = await _getDatabase();
-    final data = await db.query('user_places');
+  Future loadPlaces() async {
+    final snapshots = await _database.loadPlaces;
 
-    final places = data
-        .map(
-          (row) => Place(
-            id: row['id'] as String,
-            placeName: row['placeName'] as String,
-            image: File(row['image'] as String),
-            location: PlaceLocation(
-              latitude: row['lat'] as double,
-              longitude: row['lng'] as double,
-              address: row['address'] as String,
-            ),
-          ),
-        )
-        .toList();
+    List<Place> places = snapshots.docs.map((doc) {
+      final data = doc.data() as Map<String, dynamic>;
+      return Place(
+        id: data['id'],
+        placeName: data['placeName'],
+        image: data['image'],
+        location: PlaceLocation(
+            latitude: data['location']['latitude'],
+            longitude: data['location']['longitude'],
+            address: data['location']['address']),
+      );
+    }).toList();
 
     state = places;
   }
 
-  void addPlace(String title, File image, PlaceLocation location) async {
-    final appDir = await syspaths.getApplicationDocumentsDirectory();
-    final filename = path.basename(image.path);
-    final copiedImage = await image.copy('${appDir.path}/$filename');
+  Future addPlace(
+      String title, File image, PlaceLocation location, BuildContext context) async {
 
-    final newPlace =
-        Place(placeName: title, image: copiedImage, location: location);
+    final isAdded = await _database.addPlace(title, image, location, context);
 
-    final db = await _getDatabase();
-    db.insert('user_places', {
-      'id': newPlace.id,
-      'placeName': newPlace.placeName,
-      'image': newPlace.image.path,
-      'lat': newPlace.location.latitude,
-      'lng': newPlace.location.longitude,
-      'address': newPlace.location.address,
-    });
+    if (isAdded.isNotEmpty) {
+      final imageUrl = await _database.getImageUrl(isAdded);
+      final newPlace =
+          Place(placeName: title, image: imageUrl, location: location);
 
-    state = [newPlace, ...state];
+      state = [newPlace, ...state];
+   
+    }
+  }
+
+  Future removePlace(String id, BuildContext context) async {
+    await _database.removePlace(id, context);
+    state = state.where((p) => p.id != id).toList();
+  }
+
+  Future updatePlace({
+    required String id,
+    required String title,
+    required PlaceLocation location,
+    File? image,
+    String? initialImage,
+    BuildContext? context,
+  }) async {
+
+    if (initialImage != null && initialImage.isNotEmpty) {
+      await _database.updatePlace(
+        id: id,
+        name: title,
+        location: location,
+        initialImage: initialImage,
+        context: context,
+      );
+    } else if (image != null) {
+      await _database.updatePlace(
+        id: id,
+        name: title,
+        location: location,
+        image: image,
+        context: context,
+      );
+    }
+    
+    final imageUrl = await _database.getImageUrl(id);
+
+    state = state
+        .map((place) => place.id == id
+            ? Place(
+                id: id, placeName: title, image: imageUrl, location: location)
+            : place)
+        .toList();
   }
 }
 

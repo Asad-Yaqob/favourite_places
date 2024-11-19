@@ -1,11 +1,10 @@
-import 'package:favourite_places/screens/manage_screen.dart';
-import 'package:favourite_places/widgets/main_drawer.dart';
+import 'package:favourite_places/ui/screens/manage.dart';
+import 'package:favourite_places/ui/widgets/main_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:favourite_places/providers/user_places.dart';
-import 'package:favourite_places/screens/add_place.dart';
-import 'package:favourite_places/widgets/place_list.dart';
+import 'package:favourite_places/ui/widgets/place_list.dart';
 
 class PlacesScreen extends ConsumerStatefulWidget {
   const PlacesScreen({super.key});
@@ -29,19 +28,13 @@ class _PlacesScreenState extends ConsumerState<PlacesScreen> {
   void _navigateTo(String goTo) {
     Navigator.pop(context);
     if (goTo == 'Home') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const PlacesScreen(),
-        ),
-      );
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => const PlacesScreen(),
+      ));
     } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const ManageScreen(),
-        ),
-      );
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => const ManageScreen(),
+      ));
     }
   }
 
@@ -61,18 +54,6 @@ class _PlacesScreenState extends ConsumerState<PlacesScreen> {
               .titleLarge!
               .copyWith(color: Theme.of(context).colorScheme.onSurface),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const AddPlaceScreen(),
-                ),
-              );
-            },
-            icon: const Icon(Icons.add),
-          ),
-        ],
       ),
       body: FutureBuilder(
         future: _placesFuture,
